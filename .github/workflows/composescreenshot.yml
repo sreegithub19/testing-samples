@@ -3,7 +3,7 @@ name: Compose Preview Screenshot
 on:
   # When it will be triggered
   # And in which branch
-  pull_request:
+  push:
     branches: [ main ]
 
 jobs:
