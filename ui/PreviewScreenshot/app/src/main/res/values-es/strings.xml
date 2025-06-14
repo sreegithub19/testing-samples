@@ -16,28 +16,4 @@
 
 <resources>
     <string name="greeting">¡Hola!</string>
-    <string name="app_name">My Compose App</string>
-    <string name="welcome_message">Welcome to our application!</string>
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="submit">Submit</string>
-    <string name="cancel">Cancel</string>
-    <string name="error_message">Something went wrong. Please try again.</string>
-    <string name="success_message">Operation completed successfully!</string>
-    <string name="loading">Loading...</string>
-    <string name="retry">Retry</string>
-    <string name="home">Home</string>
-    <string name="profile">Profile</string>
-    <string name="settings">Settings</string>
-    <string name="exit_confirmation">Are you sure you want to exit?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-
-    <!-- Strings with HTML -->
-    <string name="html_bold_text">This is &lt;b&gt;bold&lt;/b&gt; text.</string>
-    <string name="html_link_text">Click &lt;a href=&quot;https://developer.android.com&quot;&gt;here&lt;/a&gt; to visit Android Developers.</string>
-    <string name="html_formatted_paragraph">&lt;p&gt;This is a &lt;strong&gt;formatted&lt;/strong&gt; paragraph with a &lt;br/&gt; line break.&lt;/p&gt;</string>
-    <string name="html_colored_text">This is &lt;font color=&quot;#FF0000&quot;&gt;red colored&lt;/font&gt; text.</string>
 </resources>
