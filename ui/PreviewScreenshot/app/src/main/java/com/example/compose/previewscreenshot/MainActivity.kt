@@ -2,6 +2,8 @@ package com.example.compose.previewscreenshot
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.compose.previewscreenshot.ui.theme.SampleTheme
 
 class MainActivity : ComponentActivity() {
@@ -76,6 +79,38 @@ fun GreetingPage(modifier: Modifier = Modifier) {
                 Text(text = "• Light and Dark mode testing")
                 Text(text = "• Screenshot validation workflow")
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Below is an HTML WebView content:",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            // Injected WebView displaying HTML content
+            AndroidView(
+                factory = { context ->
+                    WebView(context).apply {
+                        webViewClient = WebViewClient()
+                        loadData(
+                            """
+                            <html>
+                                <body>
+                                    <h1 style="color:red;">Hello from WebView!</h1>
+                                    <p>This HTML content is rendered inside the Compose UI and will appear in screenshots.</p>
+                                </body>
+                            </html>
+                            """.trimIndent(),
+                            "text/html",
+                            "utf-8"
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+            )
         }
     }
 }
