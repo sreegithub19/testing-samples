@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.compose.previewscreenshot.ui.theme.SampleTheme
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,23 +123,35 @@ fun parseHtmlToAnnotatedString(html: String): AnnotatedString {
 private fun parseElement(element: Element, builder: AnnotatedString.Builder) {
     for (node in element.childNodes()) {
         when (node) {
-            is org.jsoup.nodes.TextNode -> {
+            is TextNode -> {
                 builder.append(node.text())
             }
             is Element -> {
-                val color = node.attr("style")
+                // Extract inline color from style attribute if present
+                val inlineColor = node.attr("style")
                     .substringAfter("color:", "")
                     .substringBefore(";")
                     .trim()
 
-                val spanStyle = if (color.isNotEmpty()) {
-                    SpanStyle(color = parseColor(color))
+                // Apply color if found
+                val spanStyle = if (inlineColor.isNotEmpty()) {
+                    SpanStyle(color = parseColor(inlineColor))
                 } else {
                     SpanStyle()
                 }
 
-                builder.withStyle(spanStyle) {
-                    parseElement(node, this)
+                // Handle specific tags (e.g., h1, p)
+                when (node.tagName().lowercase()) {
+                    "h1" -> builder.withStyle(spanStyle.merge(SpanStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))) {
+                        parseElement(node, this)
+                    }
+                    "p" -> builder.withStyle(spanStyle) {
+                        parseElement(node, this)
+                        builder.append("\n\n") // Add space after paragraph
+                    }
+                    else -> builder.withStyle(spanStyle) {
+                        parseElement(node, this)
+                    }
                 }
             }
         }
