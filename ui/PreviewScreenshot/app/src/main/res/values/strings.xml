@@ -16,5 +16,21 @@
 
 <resources>
     <string name="app_name" translatable="false">Compose Preview Screenshot Testing sample</string>
-    <string name="greeting">Hello!</string>
+    <string name="greeting_html">
+        <![CDATA[
+            <html>
+                <body>
+                    <h1>Hello!</h1>
+                    <p>This is a <b>rich HTML page</b> with more content.</p>
+                    <ul>
+                        <li>Supports lists</li>
+                        <li>Supports headings</li>
+                        <li>Supports styling</li>
+                    </ul>
+                    <p>More content here to make the page larger and more visually informative.</p>
+                </body>
+            </html>
+        ]]>
+    </string>
+
 </resources>
