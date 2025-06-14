@@ -28,7 +28,7 @@ class MainScreen {
     @Composable
     fun GreetingPreview() {
         SampleTheme {
-            Greeting()
+            HtmlPage()
         }
     }
 
