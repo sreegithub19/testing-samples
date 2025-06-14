@@ -2,8 +2,7 @@ package com.example.compose.previewscreenshot
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.text.Spanned
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,12 +12,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.text.HtmlCompat
 import com.example.compose.previewscreenshot.ui.theme.SampleTheme
 
 class MainActivity : ComponentActivity() {
@@ -83,35 +86,33 @@ fun GreetingPage(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Below is an HTML WebView content:",
+                text = "Below is an HTML-rendered content:",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )
 
-            // Injected WebView displaying HTML content
-            AndroidView(
-                factory = { context ->
-                    WebView(context).apply {
-                        webViewClient = WebViewClient()
-                        loadData(
-                            """
-                            <html>
-                                <body>
-                                    <h1 style="color:red;">Hello from WebView!</h1>
-                                    <p>This HTML content is rendered inside the Compose UI and will appear in screenshots.</p>
-                                </body>
-                            </html>
-                            """.trimIndent(),
-                            "text/html",
-                            "utf-8"
-                        )
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
+            HtmlText(
+                html = """
+                    <h1 style="color:red;">Hello from WebView!</h1>
+                    <p>This HTML content is now rendered natively in Compose and will appear in CI screenshots.</p>
+                """.trimIndent()
             )
         }
+    }
+}
+
+@Composable
+fun HtmlText(html: String) {
+    val spanned: Spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
+    Text(
+        text = spanned.toAnnotatedString(),
+        fontSize = 16.sp
+    )
+}
+
+fun Spanned.toAnnotatedString(): AnnotatedString {
+    return buildAnnotatedString {
+        append(this@toAnnotatedString.toString())
     }
 }
 
