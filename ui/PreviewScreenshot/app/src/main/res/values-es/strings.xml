@@ -1,3 +1,4 @@
 <resources>
+    <string name="app_name">PreviewScreenshot</string>
     <string name="greeting">¡Hola!</string>
 </resources>
