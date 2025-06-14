@@ -21,8 +21,9 @@ jobs:
       - name: Build project and run screenshot tests
         working-directory: ./ui/PreviewScreenshot
         run: |
-         ./gradlew updateDebugScreenshotTest validateDebugScreenshotTest
-         ls -R .
+          ./gradlew updateDebugScreenshotTest
+          ./gradlew validateDebugScreenshotTest
+          ls -R .
 
       - name: Upload Screenshot Artifacts
         uses: actions/upload-artifact@v4
