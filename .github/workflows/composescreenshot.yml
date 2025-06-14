@@ -22,7 +22,7 @@ jobs:
         working-directory: ./ui/PreviewScreenshot
         run: |
          ./gradlew validateDebugScreenshotTest
-         ls -R build
+         ls -R .
 
       - name: Upload Screenshot Artifacts
         uses: actions/upload-artifact@v4
