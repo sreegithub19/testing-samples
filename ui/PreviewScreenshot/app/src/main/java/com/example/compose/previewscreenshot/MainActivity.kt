@@ -2,7 +2,6 @@ package com.example.compose.previewscreenshot
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.text.Spanned
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,17 +11,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.text.HtmlCompat
 import com.example.compose.previewscreenshot.ui.theme.SampleTheme
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +50,7 @@ fun GreetingPage(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.greeting),
+                text = "¡Hola!",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -93,7 +93,7 @@ fun GreetingPage(modifier: Modifier = Modifier) {
 
             HtmlText(
                 html = """
-                    <font color="red"><h1>Hello from WebView!</h1></font>
+                    <h1 style="color:red;">Hello from WebView!</h1>
                     <p>This HTML content is now rendered natively in Compose and will appear in CI screenshots.</p>
                 """.trimIndent()
             )
@@ -103,16 +103,55 @@ fun GreetingPage(modifier: Modifier = Modifier) {
 
 @Composable
 fun HtmlText(html: String) {
-    val spanned: Spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
+    val annotatedString = parseHtmlToAnnotatedString(html)
     Text(
-        text = spanned.toAnnotatedString(),
-        fontSize = 16.sp
+        text = annotatedString,
+        fontSize = 16.sp,
+        textAlign = TextAlign.Start
     )
 }
 
-fun Spanned.toAnnotatedString(): AnnotatedString {
+fun parseHtmlToAnnotatedString(html: String): AnnotatedString {
+    val document = Jsoup.parse(html)
+    val body = document.body()
     return buildAnnotatedString {
-        append(this@toAnnotatedString.toString())
+        parseElement(body, this)
+    }
+}
+
+private fun parseElement(element: Element, builder: AnnotatedString.Builder) {
+    for (node in element.childNodes()) {
+        when (node) {
+            is org.jsoup.nodes.TextNode -> {
+                builder.append(node.text())
+            }
+            is Element -> {
+                val color = node.attr("style")
+                    .substringAfter("color:", "")
+                    .substringBefore(";")
+                    .trim()
+
+                val spanStyle = if (color.isNotEmpty()) {
+                    SpanStyle(color = parseColor(color))
+                } else {
+                    SpanStyle()
+                }
+
+                builder.withStyle(spanStyle) {
+                    parseElement(node, this)
+                }
+            }
+        }
+    }
+}
+
+private fun parseColor(colorString: String): Color {
+    return when (colorString.lowercase()) {
+        "red" -> Color.Red
+        "blue" -> Color.Blue
+        "green" -> Color.Green
+        "black" -> Color.Black
+        else -> Color.Black // default fallback
     }
 }
 
