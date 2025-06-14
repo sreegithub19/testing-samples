@@ -93,7 +93,7 @@ fun GreetingPage(modifier: Modifier = Modifier) {
 
             HtmlText(
                 html = """
-                    <h1 style="color:red;">Hello from WebView!</h1>
+                    <font color="red"><h1>Hello from WebView!</h1></font>
                     <p>This HTML content is now rendered natively in Compose and will appear in CI screenshots.</p>
                 """.trimIndent()
             )
