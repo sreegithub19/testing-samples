@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -18,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.compose.previewscreenshot.ui.theme.SampleTheme
 import org.jsoup.Jsoup
@@ -32,9 +32,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             SampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    GreetingPage(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    GreetingPage(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -116,41 +114,38 @@ fun parseHtmlToAnnotatedString(html: String): AnnotatedString {
     val document = Jsoup.parse(html)
     val body = document.body()
     return buildAnnotatedString {
-        parseElement(body, this)
+        parseElement(body)
     }
 }
 
-private fun parseElement(element: Element, builder: AnnotatedString.Builder) {
+private fun AnnotatedString.Builder.parseElement(element: Element) {
     for (node in element.childNodes()) {
         when (node) {
             is TextNode -> {
-                builder.append(node.text())
+                append(node.text())
             }
             is Element -> {
-                // Extract inline color from style attribute if present
                 val inlineColor = node.attr("style")
                     .substringAfter("color:", "")
                     .substringBefore(";")
                     .trim()
 
-                // Apply color if found
                 val spanStyle = if (inlineColor.isNotEmpty()) {
                     SpanStyle(color = parseColor(inlineColor))
                 } else {
                     SpanStyle()
                 }
 
-                // Handle specific tags (e.g., h1, p)
                 when (node.tagName().lowercase()) {
-                    "h1" -> builder.withStyle(spanStyle.merge(SpanStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))) {
-                        parseElement(node, this)
+                    "h1" -> withStyle(spanStyle.merge(SpanStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))) {
+                        parseElement(node)
                     }
-                    "p" -> builder.withStyle(spanStyle) {
-                        parseElement(node, this)
-                        builder.append("\n\n") // Add space after paragraph
+                    "p" -> withStyle(spanStyle) {
+                        parseElement(node)
+                        append("\n\n")
                     }
-                    else -> builder.withStyle(spanStyle) {
-                        parseElement(node, this)
+                    else -> withStyle(spanStyle) {
+                        parseElement(node)
                     }
                 }
             }
