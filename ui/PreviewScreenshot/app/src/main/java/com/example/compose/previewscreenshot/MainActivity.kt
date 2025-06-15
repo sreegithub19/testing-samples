@@ -2,6 +2,7 @@ package com.example.compose.previewscreenshot
 
 import android.content.res.Configuration
 import android.os.Bundle
+import androidx.compose.ui.text.withStyle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
