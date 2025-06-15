@@ -87,4 +87,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("org.jsoup:jsoup:1.16.1")
     implementation("org.mozilla:rhino:1.7.14")
+    implementation("io.apisense:rhino-android:1.3.0")
 }

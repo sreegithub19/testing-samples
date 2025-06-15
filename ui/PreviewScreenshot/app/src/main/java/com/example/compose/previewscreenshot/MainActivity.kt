@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.ui.text.withStyle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -184,12 +183,8 @@ private fun parseColor(colorString: String): Color {
     }
 }
 
-/**
- * A composable to run JS code that uses document.write and render the resulting HTML natively.
- */
 @Composable
 fun JsDocumentWriteContent(jsCode: String) {
-    // Run the JS code inside Rhino, extract the concatenated document.write output.
     val htmlOutput = remember(jsCode) {
         runJsDocumentWrite(jsCode)
     }
@@ -198,15 +193,14 @@ fun JsDocumentWriteContent(jsCode: String) {
 }
 
 fun runJsDocumentWrite(jsCode: String): String {
-    // We'll collect document.write calls here
     val outputBuilder = StringBuilder()
 
     val context = Context.enter()
-    context.optimizationLevel = -1 // interpreted mode, safer on Android
+    context.optimizationLevel = -1 // interpreted mode
     return try {
         val scope = context.initStandardObjects()
 
-        // Define document object with write method in JS scope
+        // Create 'document' object with 'write' function
         val document = object : ScriptableObject() {
             override fun getClassName() = "document"
 
@@ -215,14 +209,13 @@ fun runJsDocumentWrite(jsCode: String): String {
                 outputBuilder.append(text)
             }
         }
-        ScriptableObject.putProperty(scope, "document", Context.javaToJS(document, scope))
+        scope.put("document", scope, document)
 
-        // Evaluate the JS code which calls document.write(...)
+        // Run the JS code
         context.evaluateString(scope, jsCode, "script", 1, null)
 
         outputBuilder.toString()
     } catch (e: Exception) {
-        // In case JS throws, just return error message as HTML
         "<p style=\"color:red;\">JavaScript error: ${e.message}</p>"
     } finally {
         Context.exit()
