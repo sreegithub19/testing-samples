@@ -21,3 +21,5 @@
 #-renamesourcefileattribute SourceFile
 
 -keepresourcefiles org/mozilla/javascript/resources/*
+-keepresourcefiles org/mozilla/javascript/resources/*.properties
+-keep class org.mozilla.javascript.resources.** { *; }
