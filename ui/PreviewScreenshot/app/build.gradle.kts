@@ -86,4 +86,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("org.jsoup:jsoup:1.16.1")
+    implementation("org.mozilla:rhino:1.7.14'")
 }
