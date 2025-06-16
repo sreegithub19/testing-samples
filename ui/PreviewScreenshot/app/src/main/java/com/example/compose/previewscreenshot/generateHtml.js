@@ -5,5 +5,3 @@ const content = `
 `;
 
 console.log(content);
-
-document.write(content);
