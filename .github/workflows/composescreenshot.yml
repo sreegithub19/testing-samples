@@ -21,7 +21,7 @@ jobs:
       - name: Generate HTML using GraalVM
         working-directory: ui/PreviewScreenshot/app/src/main/java/com/example/compose/previewscreenshot/
         run: |
-          graalvm/bin/js --jvm --polyglot generateHtml.js > generated.html
+          js --jvm --polyglot generateHtml.js > generated.html
 
 
       - name: Build project and run screenshot tests
