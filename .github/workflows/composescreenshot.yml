@@ -1,8 +1,7 @@
 # Workflow name
 name: Compose Preview Screenshot
+
 on:
-  # When it will be triggered
-  # And in which branch
   push:
     branches: [ main ]
 
@@ -11,12 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        
-      - name: Set Up JDK
-        uses: actions/setup-java@v3
+
+      - name: Set Up GraalVM
+        uses: graalvm/setup-graalvm@v1
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+          distribution: 'graalvm' # Use the GraalVM distribution
+          components: 'js'        # Install the JS engine
+
+      - name: Run JavaScript Precompilation
+        working-directory: ./ui/PreviewScreenshot
+        run: |
+          graalvm/bin/js --jvm --polyglot ui/PreviewScreenshot/app/src/main/java/com/example/compose/previewscreenshot/generateHtml.js > ui/PreviewScreenshot/app/src/main/java/com/example/compose/previewscreenshot/generated.html
 
       - name: Build project and run screenshot tests
         working-directory: ./ui/PreviewScreenshot
