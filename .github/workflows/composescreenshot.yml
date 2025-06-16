@@ -26,8 +26,9 @@ jobs:
           mv generated.html ${{ github.workspace }}/ui/PreviewScreenshot/app/src/main/assets/generated.html
 
       - name: Build project and run screenshot tests
-        working-directory: ./ui/PreviewScreenshot
+        working-directory: ui/PreviewScreenshot
         run: |
+          ls -l app/src/main/assets/generated.html
           ./gradlew clean
           ./gradlew updateDebugScreenshotTest
           ./gradlew validateDebugScreenshotTest
