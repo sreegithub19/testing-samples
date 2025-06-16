@@ -185,7 +185,13 @@ fun loadGeneratedHtml(context: Context): String {
     return try {
         context.assets.open("generated.html").bufferedReader().use { it.readText() }
     } catch (e: Exception) {
-        "<p style=\"color:red;\">Error loading generated HTML: ${e.message}</p>"
+        val assetFiles = try {
+            context.assets.list("")?.joinToString(", ") ?: "No files found"
+        } catch (listException: Exception) {
+            "Error listing assets: ${listException.message}"
+        }
+
+        "<p style=\"color:red;\">Error loading generated HTML: ${e.message}</p><p>Available assets: $assetFiles</p>"
     }
 }
 
