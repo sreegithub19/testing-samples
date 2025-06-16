@@ -18,10 +18,11 @@ jobs:
           distribution: 'graalvm' # Use the GraalVM distribution
           components: 'js'        # Install the JS engine
 
-      - name: Run JavaScript Precompilation
-        working-directory: ./ui/PreviewScreenshot
+      - name: Generate HTML using GraalVM
+        working-directory: ui/PreviewScreenshot/app/src/main/java/com/example/compose/previewscreenshot/
         run: |
-          graalvm/bin/js --jvm --polyglot ui/PreviewScreenshot/app/src/main/java/com/example/compose/previewscreenshot/generateHtml.js > ui/PreviewScreenshot/app/src/main/java/com/example/compose/previewscreenshot/generated.html
+          graalvm/bin/js --jvm --polyglot generateHtml.js > generated.html
+
 
       - name: Build project and run screenshot tests
         working-directory: ./ui/PreviewScreenshot
