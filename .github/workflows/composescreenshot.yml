@@ -22,8 +22,8 @@ jobs:
         working-directory: ui/PreviewScreenshot/app/src/main/java/com/example/compose/previewscreenshot/
         run: |
           js --jvm --polyglot generateHtml.js > generated.html
-          mkdir -p ../../../../assets
-          mv generated.html ../../../../assets/generated.html
+          mkdir -p ../../assets
+          mv generated.html ../../assets/generated.html
 
 
       - name: Build project and run screenshot tests
