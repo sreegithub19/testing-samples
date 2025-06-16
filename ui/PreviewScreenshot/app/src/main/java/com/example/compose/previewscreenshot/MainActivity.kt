@@ -1,6 +1,7 @@
 package com.example.compose.previewscreenshot
 
 import android.content.Context
+import java.io.File
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -183,17 +184,13 @@ private fun parseColor(colorString: String): Color {
 
 fun loadGeneratedHtml(context: Context): String {
     return try {
-        context.assets.open("generated.html").bufferedReader().use { it.readText() }
+        val inputStream = context.resources.openRawResource(R.raw.generated)
+        inputStream.bufferedReader().use { it.readText() }
     } catch (e: Exception) {
-        val assetFiles = try {
-            context.assets.list("")?.joinToString(", ") ?: "No files found"
-        } catch (listException: Exception) {
-            "Error listing assets: ${listException.message}"
-        }
-
-        "<p style=\"color:red;\">Error loading generated HTML: ${e.message}</p><p>Available assets: $assetFiles</p>"
+        "<p style=\"color:red;\">Error loading generated HTML: ${e.message}</p>"
     }
 }
+
 
 @Preview(showBackground = true)
 @Preview(showBackground = true, locale = "es")

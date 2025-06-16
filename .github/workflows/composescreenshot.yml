@@ -22,13 +22,12 @@ jobs:
         working-directory: ui/PreviewScreenshot/app/src/main/java/com/example/compose/previewscreenshot/
         run: |
           js --jvm --polyglot generateHtml.js > generated.html
-          mkdir -p ${{ github.workspace }}/ui/PreviewScreenshot/app/src/main/assets
-          mv generated.html ${{ github.workspace }}/ui/PreviewScreenshot/app/src/main/assets/generated.html
+          mkdir -p ${{ github.workspace }}/ui/PreviewScreenshot/app/src/main/res/raw
+          mv generated.html ${{ github.workspace }}/ui/PreviewScreenshot/app/src/main/res/raw/generated.html
 
       - name: Build project and run screenshot tests
         working-directory: ui/PreviewScreenshot
         run: |
-          ls -l app/src/main/assets/generated.html
           ./gradlew clean
           ./gradlew updateDebugScreenshotTest
           ./gradlew validateDebugScreenshotTest
